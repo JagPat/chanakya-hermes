@@ -24,11 +24,16 @@ COPY --chmod=0755 --from=uv_source /usr/local/bin/uv /usr/local/bin/uvx /usr/loc
 COPY . /opt/hermes
 WORKDIR /opt/hermes
 
-# Install Node dependencies and Playwright as root (--with-deps needs apt)
+# Install Node dependencies and Playwright as root (--with-deps needs apt),
+# then build the web dashboard bundle that `hermes web` serves from
+# hermes_cli/web_dist/ (missing step upstream — causes dashboard 404 on v0.10.0).
 RUN npm install --prefer-offline --no-audit && \
     npx playwright install --with-deps chromium --only-shell && \
     cd /opt/hermes/scripts/whatsapp-bridge && \
     npm install --prefer-offline --no-audit && \
+    cd /opt/hermes/web && \
+    npm install --prefer-offline --no-audit && \
+    npm run build && \
     npm cache clean --force
 
 # Hand ownership to hermes user, then install Python deps in a virtualenv
