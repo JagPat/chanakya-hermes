@@ -48,5 +48,5 @@ RUN chmod +x /opt/hermes/docker/entrypoint.sh
 
 ENV HERMES_HOME=/opt/data
 VOLUME [ "/opt/data" ]
-CMD [ "web" ]
+CMD [ "dashboard", "--host", "0.0.0.0", "--port", "3000", "--no-open", "--insecure" ]
 ENTRYPOINT [ "/opt/hermes/docker/entrypoint.sh" ]
