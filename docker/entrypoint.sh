@@ -53,9 +53,15 @@ if [ ! -f "$HERMES_HOME/.env" ]; then
     cp "$INSTALL_DIR/.env.example" "$HERMES_HOME/.env"
 fi
 
-# config.yaml
+# config.yaml — prefer Chanakya config if present, else upstream example
 if [ ! -f "$HERMES_HOME/config.yaml" ]; then
-    cp "$INSTALL_DIR/cli-config.yaml.example" "$HERMES_HOME/config.yaml"
+    if [ -f "$INSTALL_DIR/cli-config.chanakya.yaml" ]; then
+        cp "$INSTALL_DIR/cli-config.chanakya.yaml" "$HERMES_HOME/config.yaml"
+        echo "[entrypoint] Seeded config.yaml from cli-config.chanakya.yaml (Chanakya profile)"
+    else
+        cp "$INSTALL_DIR/cli-config.yaml.example" "$HERMES_HOME/config.yaml"
+        echo "[entrypoint] Seeded config.yaml from upstream cli-config.yaml.example"
+    fi
 fi
 
 # SOUL.md
